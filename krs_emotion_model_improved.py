@@ -50,6 +50,7 @@ test_labels_encoded = label_encoder.transform(test_labels)
 # 텍스트 토큰화 (어휘 크기 증가)
 tokenizer = Tokenizer(num_words=15000, oov_token="<OOV>")
 tokenizer.fit_on_texts(train_texts)
+print(tokenizer.word_index)
 
 train_sequences = tokenizer.texts_to_sequences(train_texts)
 val_sequences = tokenizer.texts_to_sequences(val_texts)
@@ -69,7 +70,7 @@ print(f"  테스트: {test_padded.shape}")
 # 2. 개선된 모델 구축
 print("\n2. 개선된 모델 구축 중...")
 vocab_size = len(tokenizer.word_index) + 1
-embedding_dim = 256  # 임베딩 차원 증가
+embedding_dim = 128  # 임베딩 차원 증가
 num_classes = len(label_encoder.classes_)
 
 model = Sequential([
@@ -114,7 +115,7 @@ print("\n4. 모델 훈련 시작...")
 history = model.fit(
     train_padded,
     train_labels_encoded,
-    epochs=50,  # 에포크 증가
+    epochs=10,  # 에포크 증가
     batch_size=64,  # 배치 크기 증가
     validation_data=(val_padded, val_labels_encoded),
     callbacks=[early_stopping, reduce_lr],
